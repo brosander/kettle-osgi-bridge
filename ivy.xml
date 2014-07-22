@@ -34,6 +34,7 @@
       <dependency org="commons-io" name="commons-io" rev="1.4" conf="default->default" />
       <dependency org="commons-beanutils" name="commons-beanutils" rev="1.7.0" conf="default->default" />
       <dependency org="commons-lang" name="commons-lang" rev="2.4" conf="default->default" />
+      <dependency org="org.apache.karaf.jaas" name="org.apache.karaf.jaas.boot" rev="2.3.5" transitive="false"/>
       <dependency org="org.apache.karaf" name="apache-karaf" rev="2.3.5" transitive="false" conf="runtime->default">
         <artifact name="apache-karaf" type="zip"/>
       </dependency> 

@@ -34,8 +34,7 @@ public class OSGIActivator {
   }
 
   public void start() throws Exception {
-
-    KarafHost.setInitialized(true);
+    KarafHost.getInstance().setInitialized(true);
     OSGIPluginTracker.getInstance().setBundleContext(bundleContext);
     OSGIPluginTracker.getInstance().init(PluginRegistry.getInstance());
 

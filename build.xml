@@ -23,11 +23,19 @@
   <target name="resolve-default" depends="subfloor.resolve-default">
     <ivy:resolve file="${ivyfile}" conf="runtime" />
     <ivy:retrieve conf="runtime" pattern="${lib.runtime.dir}/[module]-[revision](-[classifier]).[ext]" symlink="${ivy.use.symlinks.internal}" />
+    <unzip src="${lib.runtime.dir}/apache-karaf-${dependency.karaf.version}.zip" dest="${lib.dir}">
+      <patternset>
+      	<include name="apache-karaf-${dependency.karaf.version}/lib/karaf.jar"/>
+      </patternset>
+      <flattenmapper/>
+    </unzip>
   </target>
 
   <target name="assemble.init">
     <mkdir dir="${approot.stage.dir}" />
-    <unzip src="${lib.runtime.dir}/apache-karaf-${dependency.karaf.version}.zip" dest="${approot.stage.dir}" />
+    <unzip src="${lib.runtime.dir}/apache-karaf-${dependency.karaf.version}.zip" dest="${approot.stage.dir}">
+      <globmapper from="apache-karaf-${dependency.karaf.version}/*" to="karaf/*"/>
+    </unzip>
     <copy file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" todir="${approot.stage.dir}"/>
   </target>
 
@@ -39,6 +47,7 @@
     <copy todir="${approot.stage.dir}/lib">
       <fileset dir="${lib.dir}">
         <include name="org*.jar"/>
+        <include name="karaf*.jar"/>
           </fileset>
     </copy>
 
