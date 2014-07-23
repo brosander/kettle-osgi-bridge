@@ -19,7 +19,8 @@ public class OSGIPluginType implements PluginTypeInterface {
   private static OSGIPluginType pluginType;
 
   public OSGIPluginType(){
-    
+    ID = "OSGI_PLUGIN_TYPE";
+    name = "Osgi Plugin";
   }
 
 	public static OSGIPluginType getInstance() {

@@ -36,7 +36,7 @@
       <dependency org="commons-lang" name="commons-lang" rev="2.4" conf="default->default" />
       <dependency org="org.apache.karaf.jaas" name="org.apache.karaf.jaas.boot" rev="2.3.5" transitive="false"/>
       <dependency org="org.apache.karaf" name="apache-karaf" rev="2.3.5" transitive="false" conf="runtime->default">
-        <artifact name="apache-karaf" type="zip"/>
+        <artifact name="apache-karaf" type="tar.gz"/>
       </dependency> 
 
   </dependencies>
