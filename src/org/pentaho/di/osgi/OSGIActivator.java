@@ -6,8 +6,8 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.pentaho.di.core.plugins.PluginInterface;
 import org.pentaho.di.core.plugins.PluginRegistry;
 import org.pentaho.di.karaf.KarafHost;
-import org.pentaho.osgi.BeanFactory;
-import org.pentaho.osgi.BeanFactoryLocator;
+import org.pentaho.osgi.api.BeanFactory;
+import org.pentaho.osgi.api.BeanFactoryLocator;
 
 /**
  * User: nbaker

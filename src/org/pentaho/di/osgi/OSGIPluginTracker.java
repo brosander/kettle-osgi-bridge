@@ -38,8 +38,8 @@ import org.pentaho.di.core.plugins.PluginRegistryExtension;
 import org.pentaho.di.core.plugins.PluginTypeInterface;
 import org.pentaho.di.core.plugins.RegistryPlugin;
 import org.pentaho.di.karaf.KarafHost;
-import org.pentaho.osgi.BeanFactory;
-import org.pentaho.osgi.BeanFactoryLocator;
+import org.pentaho.osgi.api.BeanFactory;
+import org.pentaho.osgi.api.BeanFactoryLocator;
 
 /**
  * User: nbaker Date: 11/9/10

@@ -1,12 +1,12 @@
 package org.pentaho.di.osgi;
 
-import org.pentaho.di.core.exception.KettlePluginException;
-import org.pentaho.di.core.plugins.PluginFolderInterface;
-import org.pentaho.di.core.plugins.PluginTypeInterface;
-
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.List;
+
+import org.pentaho.di.core.exception.KettlePluginException;
+import org.pentaho.di.core.plugins.PluginFolderInterface;
+import org.pentaho.di.core.plugins.PluginTypeInterface;
 
 /**
  * User: nbaker

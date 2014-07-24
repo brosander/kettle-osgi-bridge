@@ -1,14 +1,14 @@
 package org.pentaho.di.osgi;
 
-import org.pentaho.di.core.plugins.ClassLoadingPluginInterface;
-import org.pentaho.di.core.plugins.PluginInterface;
-import org.pentaho.di.core.plugins.PluginTypeInterface;
-import org.pentaho.osgi.BeanFactory;
-
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import org.pentaho.di.core.plugins.ClassLoadingPluginInterface;
+import org.pentaho.di.core.plugins.PluginInterface;
+import org.pentaho.di.core.plugins.PluginTypeInterface;
+import org.pentaho.osgi.api.BeanFactory;
 
 /**
  * User: nbaker Date: 12/9/10
