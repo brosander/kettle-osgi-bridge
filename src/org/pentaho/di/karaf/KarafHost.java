@@ -1,16 +1,10 @@
 package org.pentaho.di.karaf;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.karaf.main.Main;
-import org.pentaho.di.core.annotations.LifecyclePlugin;
-import org.pentaho.di.core.gui.GUIOption;
-import org.pentaho.di.core.lifecycle.LifeEventHandler;
-import org.pentaho.di.core.lifecycle.LifecycleException;
-import org.pentaho.di.core.lifecycle.LifecycleListener;
-import org.pentaho.di.core.plugins.PluginClassTypeMapping;
-
 import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.karaf.main.Main;
+import org.pentaho.di.core.logging.KettleLogStore;
+import org.pentaho.di.core.logging.LogChannelInterface;
 
 /**
  * User: nbaker
@@ -19,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class KarafHost {
   private static final KarafHost instance = init();
+  private final LogChannelInterface log;
   
   public static KarafHost getInstance() {
     return instance;
@@ -34,20 +29,33 @@ public class KarafHost {
   }
 
   private boolean initialized;
-  private final Main main;
+  private Main main;
 
   private KarafHost() throws Exception {
-    String root = new File( "plugins/karaf-plugin/karaf").getAbsolutePath();
-    System.setProperty("karaf.home", root);
-    System.setProperty("karaf.base", root);
-    System.setProperty("karaf.data", root + "/data");
-    System.setProperty("karaf.history", root + "/data/history.txt");
-    System.setProperty("karaf.instances", root + "/instances");
-    System.setProperty("karaf.startLocalConsole", "false");
-    System.setProperty("karaf.startRemoteShell", "true");
-    System.setProperty("karaf.lock", "false");
-    main = new Main(new String[0]);
-    main.launch();
+    log = KettleLogStore.getLogChannelInterfaceFactory().create( this );
+    Thread karafLaunchThread = new Thread( new Runnable() {
+      
+      @Override
+      public void run() {
+        String root = new File( "plugins/karaf-plugin/karaf").getAbsolutePath();
+        System.setProperty("karaf.home", root);
+        System.setProperty("karaf.base", root);
+        System.setProperty("karaf.data", root + "/data");
+        System.setProperty("karaf.history", root + "/data/history.txt");
+        System.setProperty("karaf.instances", root + "/instances");
+        System.setProperty("karaf.startLocalConsole", "false");
+        System.setProperty("karaf.startRemoteShell", "true");
+        System.setProperty("karaf.lock", "false");
+        main = new Main(new String[0]);
+        try {
+          main.launch();
+        } catch ( Exception e ) {
+          log.logError( "Unable to launch Karaf", e );
+        }
+      }
+    } );
+    karafLaunchThread.setContextClassLoader( this.getClass().getClassLoader() );
+    karafLaunchThread.start();
   }
 
   public synchronized boolean isInitialized(){
