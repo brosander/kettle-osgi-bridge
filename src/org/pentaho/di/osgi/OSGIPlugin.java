@@ -2,9 +2,11 @@ package org.pentaho.di.osgi;
 
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.pentaho.di.core.exception.KettlePluginException;
 import org.pentaho.di.core.plugins.ClassLoadingPluginInterface;
 import org.pentaho.di.core.plugins.PluginInterface;
 import org.pentaho.di.core.plugins.PluginTypeInterface;
@@ -27,6 +29,10 @@ public class OSGIPlugin implements PluginInterface, ClassLoadingPluginInterface 
   private Class<Object> mainType;
   private Class<PluginTypeInterface> pluginTypeInterface;
   private BeanFactory beanFactory;
+  private String casesUrl;
+  private String documentationUrl;
+  private String forumUrl;
+  private Map<String, String> classToBeanMap;
 
   public OSGIPlugin() {
 
@@ -138,8 +144,17 @@ public class OSGIPlugin implements PluginInterface, ClassLoadingPluginInterface 
   }
 
   @Override
-  public <T> T loadClass( Class<T> pluginClass ) {
-    return OSGIPluginTracker.getInstance().getBean( pluginClass, this, name + "_" + pluginClass.getSimpleName() );
+  public <T> T loadClass( Class<T> pluginClass ) throws KettlePluginException {
+    String id = classToBeanMap.get( pluginClass.getCanonicalName() );
+    if ( id != null ) {
+      return OSGIPluginTracker.getInstance().getBean( pluginClass, this, id );
+    } else {
+      try {
+        return pluginClass.newInstance();
+      } catch ( Exception e ) {
+        throw new KettlePluginException( e );
+      }
+    }
   }
 
   public void setBeanFactory( BeanFactory beanFactory ) {
@@ -157,49 +172,49 @@ public class OSGIPlugin implements PluginInterface, ClassLoadingPluginInterface 
 
   @Override
   public String getCasesUrl() {
-    // TODO Auto-generated method stub
-    return null;
+    return casesUrl;
   }
 
   @Override
   public String getDocumentationUrl() {
-    // TODO Auto-generated method stub
-    return null;
+    return documentationUrl;
   }
 
   @Override
   public String getForumUrl() {
-    // TODO Auto-generated method stub
-    return null;
+    return forumUrl;
   }
 
   @Override
-  public void setCasesUrl( String arg0 ) {
-    // TODO Auto-generated method stub
-
+  public void setCasesUrl( String casesUrl ) {
+    this.casesUrl = casesUrl;
   }
 
   @Override
-  public void setDocumentationUrl( String arg0 ) {
-    // TODO Auto-generated method stub
-
+  public void setDocumentationUrl( String documentationUrl ) {
+    this.documentationUrl = documentationUrl;
   }
 
   @Override
-  public void setForumUrl( String arg0 ) {
-    // TODO Auto-generated method stub
-
+  public void setForumUrl( String forumUrl ) {
+    this.forumUrl = forumUrl;
   }
 
   @Override
   public String getClassLoaderGroup() {
-    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
   public void setClassLoaderGroup( String arg0 ) {
-    // TODO Auto-generated method stub
+    // noop
+  }
 
+  public Map<String, String> getClassToBeanMap() {
+    return classToBeanMap;
+  }
+
+  public void setClassToBeanMap( Map<String, String> classToBeanMap ) {
+    this.classToBeanMap = classToBeanMap;
   }
 }
