@@ -1,46 +1,54 @@
 package org.pentaho.di.osgi;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * User: nbaker Date: 11/11/10
+ * User: nbaker
+ * Date: 11/11/10
  */
-public class OSGIServiceTracker<S, T> extends ServiceTracker<S, T> {
+public class OSGIServiceTracker extends ServiceTracker{
 
-  private Class<T> clazzToTrack;
+  private Class clazzToTrack;
 
-  private List<ServiceReference<S>> references = new ArrayList<ServiceReference<S>>();
+  private List<ServiceReference> references = new ArrayList<ServiceReference>();
+  private BundleContext context;
   private OSGIPluginTracker tracker;
 
-  public OSGIServiceTracker( OSGIPluginTracker tracker, Class<T> clazzToTrack ) {
-    super( tracker.getBundleContext(), clazzToTrack.getName(), null );
+  public OSGIServiceTracker(OSGIPluginTracker tracker, Class clazzToTrack){
+    super(tracker.getBundleContext(), clazzToTrack.getName(), null);
     this.tracker = tracker;
     this.clazzToTrack = clazzToTrack;
+    this.context = tracker.getBundleContext();
   }
 
   @Override
-  public T addingService( ServiceReference<S> reference ) {
-    references.add( reference );
-    T retVal = super.addingService( reference );
-    tracker.serviceChanged( clazzToTrack, OSGIPluginTracker.Event.START, reference );
+  public Object addingService(ServiceReference
+    reference) {
+    references.add(reference);
+
+    Object retVal =  super.addingService(reference);
+    tracker.serviceChanged(clazzToTrack, OSGIPluginTracker.Event.START, reference);
     return retVal;
   }
 
   @Override
-  public void removedService( ServiceReference<S> reference, T service ) {
-    references.remove( reference );
-    super.removedService( reference, service );
-    tracker.serviceChanged( clazzToTrack, OSGIPluginTracker.Event.STOP, reference );
+  public void removedService(ServiceReference
+    reference, Object service) {
+    references.remove(reference);
+    super.removedService(reference, service);
+    tracker.serviceChanged(clazzToTrack, OSGIPluginTracker.Event.STOP, reference);
   }
 
   @Override
-  public void modifiedService( ServiceReference<S> reference, T service ) {
-    super.modifiedService( reference, service );
-    tracker.serviceChanged( clazzToTrack, OSGIPluginTracker.Event.MODIFY, reference );
+  public void modifiedService(ServiceReference
+    reference, Object service) {
+    super.modifiedService(reference, service);
+    tracker.serviceChanged(clazzToTrack, OSGIPluginTracker.Event.MODIFY, reference);
   }
 
 }

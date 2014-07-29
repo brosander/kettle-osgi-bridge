@@ -33,7 +33,9 @@
                 changing="true"/>
     <dependency org="pentaho" name="pentaho-osgi-utils-impl" rev="${dependency.pentaho.osgi.util.revision}" transitive="false"
                 changing="true" conf="deploy->default"/>
-
+	<dependency org="junit" name="junit" rev="4.5" conf="test->default" />
+	<dependency org="org.mockito"              name="mockito-all"          rev="1.8.4"  transitive="false" conf="test->default"/>
+	
       <dependency org="org.slf4j" name="slf4j-api" rev="1.5.8" conf="provided->default" />
       <dependency org="org.slf4j" name="slf4j-jcl" rev="1.5.8" conf="provided->default" />
 
