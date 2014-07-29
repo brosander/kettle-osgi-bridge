@@ -32,6 +32,7 @@ public class OSGIPlugin implements PluginInterface, ClassLoadingPluginInterface 
 
   }
 
+  @Override
   public String getCategory() {
     return category;
   }
@@ -39,54 +40,67 @@ public class OSGIPlugin implements PluginInterface, ClassLoadingPluginInterface 
   /**
    * No meaning in OSGI
    **/
+  @Override
   public Map<Class<?>, String> getClassMap() {
     return Collections.emptyMap();
   }
 
+  @Override
   public String getDescription() {
     return description;
   }
 
+  @Override
   public String getErrorHelpFile() {
     return errorHelpFile;
   }
 
+  @Override
   public String[] getIds() {
     return new String[] { ID };
   }
 
+  @Override
   public String getImageFile() {
     return imageFile;
   }
 
+  @Override
   public List<String> getLibraries() {
     return null;
   }
 
+  @Override
   public Class<?> getMainType() {
     return mainType;
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public URL getPluginDirectory() {
     return null;
   }
 
+  @Override
   public Class<? extends PluginTypeInterface> getPluginType() {
     return pluginTypeInterface;
   }
 
+  @Override
   public boolean isNativePlugin() {
     return false;
   }
 
+  @Override
   public boolean isSeparateClassLoaderNeeded() {
     return false;
   }
 
+  @Override
   public boolean matches( String id ) {
     return ID.equals( id );
   }
@@ -123,6 +137,7 @@ public class OSGIPlugin implements PluginInterface, ClassLoadingPluginInterface 
     this.pluginTypeInterface = pluginTypeInterface;
   }
 
+  @Override
   public <T> T loadClass( Class<T> pluginClass ) {
     return OSGIPluginTracker.getInstance().getBean( pluginClass, this, name + "_" + pluginClass.getSimpleName() );
   }
@@ -135,6 +150,7 @@ public class OSGIPlugin implements PluginInterface, ClassLoadingPluginInterface 
     return beanFactory;
   }
 
+  @Override
   public ClassLoader getClassLoader() {
     return OSGIPluginTracker.getInstance().getClassLoader( this );
   }

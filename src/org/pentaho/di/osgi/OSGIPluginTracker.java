@@ -84,6 +84,7 @@ public class OSGIPluginTracker implements PluginRegistryExtension {
       this.serviceObject = serviceObject;
     }
 
+    @Override
     public void run() {
 
       List<ServiceReferenceListener> listeners = instanceListeners.get( serviceObject );
@@ -111,6 +112,7 @@ public class OSGIPluginTracker implements PluginRegistryExtension {
       this.serviceObject = serviceObject;
     }
 
+    @Override
     public void run() {
 
       BeanFactory factory = findOrCreateBeanFactoryFor( serviceObject );
@@ -182,6 +184,7 @@ public class OSGIPluginTracker implements PluginRegistryExtension {
     return INSTANCE;
   }
 
+  @Override
   public void init( final PluginRegistry registry ) {
     KarafHost.getInstance();
     if ( KettleClientEnvironment.isInitialized() ) {
@@ -228,6 +231,7 @@ public class OSGIPluginTracker implements PluginRegistryExtension {
 
   private List<PluginTypeInterface> queuedTypes = new ArrayList<PluginTypeInterface>();
 
+  @Override
   public void searchForType( PluginTypeInterface pluginType ) {
     if ( this.getBundleContext() == null ) {
       queuedTypes.add( pluginType );
