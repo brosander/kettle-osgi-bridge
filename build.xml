@@ -16,6 +16,8 @@
     menu system.
 	</description>
   <property name="lib.runtime.dir" value="${basedir}/lib-runtime" />
+  <property name="lib.provided.dir" value="${basedir}/lib-provided" />
+  <property name="lib.deploy.dir" value="${basedir}/lib-deploy" />
 
 	<!-- Import the common_build.xml file which contains all the default tasks -->	
 	<import file="build-res/subfloor-pkg.xml"/>
@@ -23,10 +25,16 @@
   <target name="resolve-default" depends="subfloor.resolve-default">
     <ivy:resolve file="${ivyfile}" conf="runtime" />
     <ivy:retrieve conf="runtime" pattern="${lib.runtime.dir}/[module]-[revision](-[classifier]).[ext]" symlink="${ivy.use.symlinks.internal}" />
+    <ivy:resolve file="${ivyfile}" conf="provided" />
+    <ivy:retrieve conf="provided" pattern="${lib.provided.dir}/[module]-[revision](-[classifier]).[ext]" symlink="${ivy.use.symlinks.internal}" />
+    <ivy:resolve file="${ivyfile}" conf="deploy" />
+    <ivy:retrieve conf="deploy" pattern="${lib.deploy.dir}/[module]-[revision](-[classifier]).[ext]" symlink="${ivy.use.symlinks.internal}" />
     <gunzip src="${lib.runtime.dir}/apache-karaf-${dependency.karaf.version}.tar.gz" dest="${lib.runtime.dir}"/>
+    <!-- Extract dependencies from the tar -->
     <untar src="${lib.runtime.dir}/apache-karaf-${dependency.karaf.version}.tar" dest="${lib.dir}">
       <patternset>
       	<include name="apache-karaf-${dependency.karaf.version}/lib/karaf.jar"/>
+        <include name="apache-karaf-${dependency.karaf.version}/lib/karaf-jaas-boot.jar"/>
       </patternset>
       <flattenmapper/>
     </untar>
@@ -37,32 +45,72 @@
     <untar src="${lib.runtime.dir}/apache-karaf-${dependency.karaf.version}.tar" dest="${approot.stage.dir}">
       <globmapper from="apache-karaf-${dependency.karaf.version}/*" to="karaf/*"/>
     </untar>
+    <!-- Comment out logging service and bundlesl that require it -->
     <replace file="${approot.stage.dir}/karaf/etc/startup.properties" token="org/ops4j/pax/logging/pax-logging-service/" value="#org/ops4j/pax/logging/pax-logging-service/" />
     <replace file="${approot.stage.dir}/karaf/etc/startup.properties" token="org/apache/karaf/shell/org.apache.karaf.shell.log/" value="#org/apache/karaf/shell/org.apache.karaf.shell.log/" />
     <replace file="${approot.stage.dir}/karaf/etc/startup.properties" token="org/apache/karaf/features/org.apache.karaf.features.management/" value="#org/apache/karaf/features/org.apache.karaf.features.management/" />
+    <!-- Remove management feature -->
     <replaceregexp file="${approot.stage.dir}/karaf/etc/org.apache.karaf.features.cfg" match="featuresBoot=(.*)management,(.*)" replace="featuresBoot=\1\2" />
     <copy file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" todir="${approot.stage.dir}"/>
   </target>
 
   <target name="clean-jars" depends="subfloor.clean-jars">
     <delete dir="${lib.runtime.dir}"/>
+    <delete dir="${lib.provided.dir}"/>
+    <delete dir="${lib.deploy.dir}"/>
   </target>
 
   <target name="assemble.copy-libs">
     <copy todir="${approot.stage.dir}/lib">
-      <fileset dir="${lib.dir}">
-        <include name="org*.jar"/>
-        <include name="karaf*.jar"/>
-          </fileset>
+      <fileset dir="${lib.dir}"/>
     </copy>
-
-
-    <copy todir="${approot.stage.dir}/lib">
-        <fileset dir="dev-lib" includes="*.jar"/>
+    <copy todir="${approot.stage.dir}/karaf/deploy">
+      <fileset dir="${lib.deploy.dir}"/>
     </copy>
-
   </target>
 
+  <target name="create-dot-classpath" depends="init,resolve,subfloor.create-dot-classpath">
+  		<dot-classpath>
+  			<!-- Include all lib dirs -->
+  			<classpath>
+  				<fileset dir="${devlib.dir}">
+  					<include name="*.jar" />
+  				</fileset>
+  				<fileset dir="${testlib.dir}">
+  					<include name="*.jar" />
+  				</fileset>
+  				<fileset dir="${lib.dir}">
+  					<include name="**/*.jar" />
+  				</fileset>
+  				<fileset dir="${lib.provided.dir}">
+  					<include name="**/*.jar" />
+  				</fileset>
+  			</classpath>
+  		</dot-classpath>
+  	</target>
+    <path id="classpath">
+  		<fileset dir="${lib.dir}">
+  			<include name="**/*.jar" />
+  		</fileset>
+  		<fileset dir="${lib.provided.dir}">
+  			<include name="**/*.jar" />
+  		</fileset>
+  	</path>
 
-	
+  	<path id="test.classpath">
+  		<fileset dir="${devlib.dir}">
+  			<include name="*.jar" />
+  		</fileset>
+  		<fileset dir="${testlib.dir}">
+  			<include name="*.jar" />
+  		</fileset>
+  		<fileset dir="${lib.dir}">
+  			<include name="*.jar" />
+  		</fileset>
+  		<fileset dir="${lib.provided.dir}">
+  			<include name="**/*.jar" />
+  		</fileset>
+  		<dirset dir="${testclasses.dir}" />
+  		<dirset dir="${classes.dir}" />
+  	</path>
 </project>

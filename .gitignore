@@ -2,5 +2,7 @@ bin/
 dist/
 lib/
 lib-runtime/
+lib-provided/
+lib-deploy/
 .classpath
 .project
