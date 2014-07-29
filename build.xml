@@ -37,6 +37,10 @@
     <untar src="${lib.runtime.dir}/apache-karaf-${dependency.karaf.version}.tar" dest="${approot.stage.dir}">
       <globmapper from="apache-karaf-${dependency.karaf.version}/*" to="karaf/*"/>
     </untar>
+    <replace file="${approot.stage.dir}/karaf/etc/startup.properties" token="org/ops4j/pax/logging/pax-logging-service/" value="#org/ops4j/pax/logging/pax-logging-service/" />
+    <replace file="${approot.stage.dir}/karaf/etc/startup.properties" token="org/apache/karaf/shell/org.apache.karaf.shell.log/" value="#org/apache/karaf/shell/org.apache.karaf.shell.log/" />
+    <replace file="${approot.stage.dir}/karaf/etc/startup.properties" token="org/apache/karaf/features/org.apache.karaf.features.management/" value="#org/apache/karaf/features/org.apache.karaf.features.management/" />
+    <replaceregexp file="${approot.stage.dir}/karaf/etc/org.apache.karaf.features.cfg" match="featuresBoot=(.*)management,(.*)" replace="featuresBoot=\1\2" />
     <copy file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" todir="${approot.stage.dir}"/>
   </target>
 
