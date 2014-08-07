@@ -252,7 +252,7 @@ public class OSGIPluginTracker implements PluginRegistryExtension {
   @Override
   public String getPluginId( Class<? extends PluginTypeInterface> pluginType, Object pluginClass ) {
     try {
-      return (String) OSGIPluginTracker.getInstance().getBeanPluginProperty( pluginType, pluginClass, "name" );
+      return (String) OSGIPluginTracker.getInstance().getBeanPluginProperty( pluginType, pluginClass, "ID" );
     } catch ( Exception e ) {
       e.printStackTrace();
     }
