@@ -65,6 +65,10 @@ public class OSGIPlugin implements PluginInterface, ClassLoadingPluginInterface 
   public String[] getIds() {
     return new String[] { ID };
   }
+  
+  public String getID() {
+    return ID;
+  }
 
   @Override
   public String getImageFile() {
